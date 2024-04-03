@@ -58,17 +58,17 @@ public class PubSubFunction implements CloudEventsFunction {
     try {
       sendVerificationEmail(email, verificationLink);
 
-      updateEmailSentTime(uuid, email);
+      updateEmailSentTime(email);
     } catch (UnirestException e) {
       logger.severe("Error sending email: " + e.getMessage());
     }
   }
 
-  private void updateEmailSentTime(String uuid, String email) {
+  private void updateEmailSentTime(String email) {
     try (Connection conn = createConnectionPool().getConnection()) {
-        String stmt = "UPDATE cloudDatabase.users SET email_sent_time = CURRENT_TIMESTAMP() WHERE id=?";
+        String stmt = "UPDATE cloudDatabase.users SET email_expiry_time = DATE_ADD(NOW(), INTERVAL 2 MINUTE) WHERE username =?";
         try (PreparedStatement voteStmt = conn.prepareStatement(stmt)) {
-          voteStmt.setString(1, uuid);
+          voteStmt.setString(1, email);
           voteStmt.execute();
           logger.info("Updated for user: " + email);
         }
