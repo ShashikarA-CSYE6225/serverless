@@ -53,7 +53,7 @@ public class PubSubFunction implements CloudEventsFunction {
     // Log the message
     logger.info("uuid: " + uuid + "email: " + email);
 
-    String verificationLink = "http://csye6225-cloud-project.me.:8080/v1/user/verify?token=" + uuid + ":" + email;
+    String verificationLink = "https://csye6225-cloud-project.me./v1/user/verify?token=" + uuid + ":" + email;
 
     try {
       sendVerificationEmail(email, verificationLink);
