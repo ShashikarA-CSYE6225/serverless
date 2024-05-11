@@ -32,6 +32,7 @@ public class PubSubFunction implements CloudEventsFunction {
   private static final String DB_CONNECTION_URL = "jdbc:mysql://" + DB_IP_ADDRESS + ":" + "3306" + "/" + DB_NAME;
   private static final String DB_PASSWORD = System.getenv("DB_PASSWORD");
   private static final String DB_USER = System.getenv("DB_USER");
+  private static final String API_KEY = System.getenv("API_KEY");
 
   public void accept(CloudEvent event) {
     // Get cloud event data as JSON string
@@ -89,10 +90,9 @@ public class PubSubFunction implements CloudEventsFunction {
     return new HikariDataSource(config);
   }
 
-
   private void sendVerificationEmail(String email, String verificationLink) throws UnirestException {
     HttpResponse<JsonNode> request = Unirest.post("https://api.mailgun.net/v3/" + "csye6225-cloud-project.me" + "/messages")
-            .basicAuth("api", "8bb52f00ee1ee6b889bdf71f7dae647a-f68a26c9-3e94c1f9")
+            .basicAuth("api", API_KEY)
             .queryString("from", "Excited User <user@csye6225-cloud-project.me>")
             .queryString("to", email)
             .queryString("subject", "Email Verification")
